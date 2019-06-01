@@ -4,7 +4,6 @@ import engine.components.Transform;
 import engine.components.Component;
 import java.util.ArrayList;
 import java.util.List;
-import engine.components.Camera;
 
 public class GameObject {
     

@@ -3,18 +3,23 @@ package engine.managers;
 import java.util.ArrayList;
 import java.util.List;
 import engine.Vector3;
-import engine.components.SpherePrimative;
+import engine.components.Collider;
+import engine.components.SphereCollider;
 
 public class ColliderManager {
     
-    public static List<SpherePrimative> spherePrimatives = new ArrayList<>();
+    public static List<Collider> sceneColliders;
     
     public ColliderManager () {}
     
-    public static SpherePrimative checkPointSphereCollision (Vector3 point) {
-        for (SpherePrimative sphere : spherePrimatives) {
-            if (sphere.isVectorWithinSphere(point) == true) {
-                return sphere;
+    public static void initalise() {
+        sceneColliders = new ArrayList<>();
+    }
+    
+    public static Collider checkPointForCollision (Vector3 point) {
+        for (Collider col : sceneColliders) {
+            if (col.doesPointCollide(point) == true) {
+                return col;
             }
         }
         

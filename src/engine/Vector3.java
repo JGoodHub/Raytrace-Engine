@@ -8,7 +8,11 @@ public class Vector3 {
     public float y = 0;
     public float z = 0;
     
-    public Vector3() {}
+    public Vector3() {
+        x = 0;
+        y = 0;
+        z = 0;
+    }
 
     public Vector3 (float x, float y, float z) {
         this.x = x;
@@ -17,21 +21,14 @@ public class Vector3 {
     }
     
     public static float distance(Vector3 vectorA, Vector3 vectorB) {
-        Vector3 relativeVector = vectorB.subtract(vectorA);
+        Vector3 relativeVector = Vector3.copy(vectorB).subtract(vectorA);
         return (float)Math.sqrt(Math.pow(relativeVector.x, 2) + Math.pow(relativeVector.y, 2) + Math.pow(relativeVector.z, 2));
     }
     
     public static Vector3 copy (Vector3 original) {
         return new Vector3(original.x, original.y, original.z);
     }
-    
-    public static void normalise (Vector3 vector) {
-        float startingMagnitude = vector.magnitude();
-        vector.x *= 1 / startingMagnitude;
-        vector.y *= 1 / startingMagnitude;
-        vector.z *= 1 / startingMagnitude;
-    }
-    
+        
     public Vector3 add (Vector3 other) {
         x += other.x;
         y += other.y;
@@ -92,8 +89,7 @@ public class Vector3 {
 
     @Override
     public String toString() {
-        return "Vector3{" + "x = " + (Math.round(x * 100) / 100f) + ", y = " + (Math.round(y * 100) / 100f) + ", z = " + (Math.round(z * 100) / 100f) + '}';
-    }
-     
+        return "Vector3{" + "x = " + (Math.round(x * 1000) / 1000f) + ", y = " + (Math.round(y * 1000) / 1000f) + ", z = " + (Math.round(z * 1000) / 1000f) + '}';
+    }     
     
 }

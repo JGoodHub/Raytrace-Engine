@@ -9,55 +9,67 @@ import engine.Vector3;
 public class Camera extends Component {
        
     private int xResolution;
-    private float horizontalFoV;
-    
     private int yResolution;
-    private float verticalFoV;
+    private float fieldOfView = 60f;    
     
-    private float nearClippingPlane = 0.1f;
+    private float nearClippingPlane = 1f;
     private float farClippingPlane = 100f;
+    
+    private Vector3[][] vectorPixelMap;
     
     private Screen targetScreen;
     
     private Color backgroundColour;
     
-    public Camera (Screen targetScreen, float fieldOfView, Color backgroundColour) {
+    public Camera (Screen targetScreen, Color backgroundColour) {
         this.targetScreen = targetScreen;    
         
         xResolution = targetScreen.width;
         yResolution = targetScreen.height;
         
-        horizontalFoV = fieldOfView;
-        verticalFoV = (horizontalFoV / xResolution) * yResolution;
-                
         this.backgroundColour = backgroundColour;
+        
+        generatePixelVectorMap();
+    }
+    
+    private void generatePixelVectorMap () {
+        vectorPixelMap = new Vector3[xResolution][yResolution];        
+        
+        float fovInRadians = (float)Math.toRadians(fieldOfView);
+        float pixelDelta = (float)((Math.tan(fovInRadians / 2) * nearClippingPlane) / (xResolution / 2));
+        Vector3 pixelMapper = new Vector3(
+                -pixelDelta * (xResolution / 2),
+                pixelDelta * (yResolution / 2),
+                nearClippingPlane
+        );
+                
+        for (int y = 0; y < yResolution; y++) {
+            for (int x = 0; x < xResolution; x++) {
+                vectorPixelMap[x][y] = Vector3.copy(pixelMapper);
+                pixelMapper.x += pixelDelta;
+            }
+            
+            pixelMapper.x -= pixelDelta * xResolution;
+            pixelMapper.y -= pixelDelta;
+        }
+        
     }
     
     public Color[][] raycastPixelColourMap () {
         Color[][] colourMap = new Color[xResolution][yResolution];
-        float fovAngleStep = horizontalFoV / xResolution;
-                
-        Vector3 raycastDirection = Vector3.copy(parent.transform.rotation);
-        System.out.println(raycastDirection.normalised());
-        raycastDirection.rotateAroundAxis(-1 * (horizontalFoV / 2), Vector3.Axis.Y);
-        System.out.println(raycastDirection.normalised());
-        raycastDirection.rotateAroundAxis(-1 * (verticalFoV / 2), Vector3.Axis.X);
-        System.out.println(raycastDirection.normalised());
+        Vector3 rayDirection;      
+        
         for (int y = 0; y < yResolution; y++) {
             for (int x = 0; x < xResolution; x++) {
-                RaycastHit rayhit = Raycaster.fireRaycast(parent.transform.position, raycastDirection, farClippingPlane);
+                rayDirection = Vector3.copy(vectorPixelMap[x][y]).normalised();
+                                
+                RaycastHit rayhit = Raycaster.fireRaycast(parent.transform.position, rayDirection, farClippingPlane);
                 if (rayhit != null) {
-                    colourMap[x][y] = rayhit.sphere.colour;
+                    colourMap[x][y] = rayhit.collider.getColour();
                 } else {
                     colourMap[x][y] = backgroundColour;
-                }
-                
-                raycastDirection.rotateAroundAxis(fovAngleStep, Vector3.Axis.Y);
-                //System.out.println("Pixel: x - " + x + " y - " + y + " Raycast Direction Vector: " + raycastDirection);
-            }
-            
-            raycastDirection.rotateAroundAxis(-fovAngleStep * xResolution, Vector3.Axis.Y);
-            raycastDirection.rotateAroundAxis(fovAngleStep, Vector3.Axis.X);
+                }                
+            }            
         }
         
         return colourMap;

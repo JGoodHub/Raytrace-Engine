@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/James/Documents/NetBeansProjects/RaytraceEngine/src/engine/components/SphereCollider.java</file>
+            <file>file:/C:/Users/James/Documents/NetBeansProjects/RaytraceEngine/src/engine/components/PlaneCollider.java</file>
             <file>file:/C:/Users/James/Documents/NetBeansProjects/RaytraceEngine/src/engine/RaytracingEngine.java</file>
-            <file>file:/C:/Users/James/Documents/NetBeansProjects/RaytraceEngine/src/engine/Raycaster.java</file>
-            <file>file:/C:/Users/James/Documents/NetBeansProjects/RaytraceEngine/src/engine/Vector3.java</file>
-            <file>file:/C:/Users/James/Documents/NetBeansProjects/RaytraceEngine/src/engine/components/Transform.java</file>
             <file>file:/C:/Users/James/Documents/NetBeansProjects/RaytraceEngine/src/engine/components/Camera.java</file>
-            <file>file:/C:/Users/James/Documents/NetBeansProjects/RaytraceEngine/src/engine/PitchYawEular.java</file>
         </group>
     </open-files>
 </project-private>
