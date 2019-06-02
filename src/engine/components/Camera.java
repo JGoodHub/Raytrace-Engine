@@ -3,6 +3,7 @@ package engine.components;
 import javafx.scene.paint.Color;
 import engine.RaycastHit;
 import engine.Raycaster;
+import engine.RaytracingEngine;
 import engine.Screen;
 import engine.Vector3;
 import engine.managers.LightManager;
@@ -12,7 +13,7 @@ public class Camera extends Component {
     private int xResolution;
     private int yResolution;
     private float fieldOfView = 60f;    
-    private float farClippingPlane = 100f;
+    private float farClippingPlane = 300f;
     
     private Vector3[][] vectorPixelMap;    
     private Screen targetScreen;    
@@ -54,8 +55,8 @@ public class Camera extends Component {
         
     }
     
-    public Color[][] raycastPixelColourMap () {
-        Color[][] colourMap = new Color[xResolution][yResolution];
+    public void drawRaycastColourMapToScreen () {
+        Color[] colourRow = new Color[xResolution];
         Vector3 rayDirection;
         
         for (int y = 0; y < yResolution; y++) {
@@ -67,7 +68,7 @@ public class Camera extends Component {
                 if (colliderRayhit.collider != null) {
                     if (renderShadows == true) {
                         //Check if that part of the collider is in shadow
-                        for (Light l : LightManager.sceneLights) {                        
+                        for (Light l : LightManager.sceneLights) {                 
                             RaycastHit lightRayhit = Raycaster.fireRaycast(
                                     colliderRayhit.point, 
                                     Vector3.getDirection(colliderRayhit.point, l.parent.transform.position), 
@@ -75,23 +76,23 @@ public class Camera extends Component {
                             );
 
                             if (Vector3.distance(lightRayhit.point, l.parent.transform.position) < 1f) {
-                                colourMap[x][y] = colliderRayhit.collider.getColour();
+                                colourRow[x] = colliderRayhit.collider.getColour();
                             } else {
-                                colourMap[x][y] = colliderRayhit.collider.getColour().darker().darker();
+                                colourRow[x] = colliderRayhit.collider.getColour().darker().darker();
                             }
                         }
                     } else {
-                        colourMap[x][y] = colliderRayhit.collider.getColour();
+                        colourRow[x] = colliderRayhit.collider.getColour();
                     }
                 } else {
-                    colourMap[x][y] = backgroundColour;
+                    colourRow[x] = backgroundColour;
                 }                
             }
             
-            System.out.println("Progress: " + Math.round(((float)y / yResolution) * 100) + "%");
+            System.out.println("Progress: " + (Math.round((y / (float)yResolution) * 1000) / 10f) + "%");
+            RaytracingEngine.screen.drawLineToScreen(y, colourRow);
+            
         }
-        
-        return colourMap;
     } 
     
     

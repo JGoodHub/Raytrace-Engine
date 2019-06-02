@@ -11,8 +11,6 @@ public class LightManager {
     public static void initialise () {
         sceneLights = new ArrayList<>();
     }
-    
-    
-    
+       
     
 }

@@ -8,14 +8,13 @@ import javafx.scene.paint.Color;
 
 public class Screen {
     
-    private Image screenImage;
     public ImageView imageView;
     
     private PixelWriter screenWriter;
     private WritableImage writableScreen;
     
-    public int width = 640;
-    public int height = 480;
+    public int width;
+    public int height;
     
     public Screen (int width, int height) {
         this.width = width;
@@ -27,15 +26,21 @@ public class Screen {
     }
     
     public void fillScreenWithColour (Color fillColour) {
-        for (int y = 0; y < screenImage.getHeight(); y++) {
-            for (int x = 0; x < screenImage.getWidth(); x++) {
+        for (int y = 0; y < writableScreen.getHeight(); y++) {
+            for (int x = 0; x < writableScreen.getWidth(); x++) {
                 drawPixelToScreen(x, y, fillColour);
             }
         }
     }
     
     public void drawPixelToScreen (int x, int y, Color colour) {
-        screenWriter.setColor(x, y, colour);  
+        screenWriter.setColor(x, y, colour);
+    }
+    
+    public synchronized void drawLineToScreen (int y, Color[] colourRow) {
+        for (int x = 0; x < colourRow.length; x++) {
+            drawPixelToScreen(x, y, colourRow[x]);
+        }
     }
     
     public void drawColourMapToScreen (Color[][] colourMap) {
@@ -47,12 +52,11 @@ public class Screen {
     }
        
     public void clearScreen () {
-        for (int y = 0; y < screenImage.getHeight(); y++) {
-            for (int x = 0; x < screenImage.getWidth(); x++) {
+        for (int y = 0; y < writableScreen.getHeight(); y++) {
+            for (int x = 0; x < writableScreen.getWidth(); x++) {
                 drawPixelToScreen(x, y, Color.WHITE);
             }
         }
-    }
-    
+    }    
     
 }
