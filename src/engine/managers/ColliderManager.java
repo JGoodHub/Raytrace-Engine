@@ -9,8 +9,6 @@ public class ColliderManager {
     
     public static List<Collider> sceneColliders;
     
-    public ColliderManager () {}
-    
     public static void initalise() {
         sceneColliders = new ArrayList<>();
     }

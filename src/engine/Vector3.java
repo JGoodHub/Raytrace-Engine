@@ -33,6 +33,10 @@ public class Vector3 {
     public static Vector3 copy (Vector3 original) {
         return new Vector3(original.x, original.y, original.z);
     }
+    
+    public static Vector3 getDirection (Vector3 origin, Vector3 target) {
+        return Vector3.copy(target).subtract(origin);
+    }
         
     public Vector3 add (Vector3 other) {
         x += other.x;
@@ -95,6 +99,6 @@ public class Vector3 {
     @Override
     public String toString() {
         return "Vector3{" + "x = " + (Math.round(x * 1000) / 1000f) + ", y = " + (Math.round(y * 1000) / 1000f) + ", z = " + (Math.round(z * 1000) / 1000f) + '}';
-    }     
+    }  
     
 }

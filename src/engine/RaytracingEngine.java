@@ -1,6 +1,7 @@
 package engine;
 
 import engine.components.Camera;
+import engine.components.Light;
 import engine.components.PlaneCollider;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -8,6 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import engine.components.SphereCollider;
 import engine.managers.ColliderManager;
+import engine.managers.LightManager;
 import javafx.scene.layout.VBox;
 
 public class RaytracingEngine extends Application {
@@ -22,7 +24,7 @@ public class RaytracingEngine extends Application {
     
     @Override
     public void start(Stage primaryStage) {        
-        screen = new Screen(640, 320);
+        screen = new Screen(1280/2, 720/2);
         Scene scene = new Scene(new VBox(screen.imageView), screen.width, screen.height);
         
         primaryStage.setTitle("Raytrace Engine Test");
@@ -34,10 +36,13 @@ public class RaytracingEngine extends Application {
     }
 
     public void initialise () {
+        System.out.println("Initalising the scene");
         nanoStartTime = System.nanoTime();
         
         ColliderManager.initalise();
+        LightManager.initialise();
         
+        System.out.println("Creating scene objects");
         GameObject cameraObject = new GameObject();
         cameraObject.attachComponent(new Camera(screen, Color.GREY));
         cameraObject.transform.forward = new Vector3(0, 0, 1);
@@ -58,12 +63,16 @@ public class RaytracingEngine extends Application {
         planeObject.attachComponent(new PlaneCollider(Color.BURLYWOOD));
         planeObject.transform.position = new Vector3(0, -5, 0);
         
+        GameObject lightObject = new GameObject();
+        lightObject.attachComponent(new Light(1f, Color.WHITE));
+        lightObject.transform.position = new Vector3(10, 50, 45);
+        
+        System.out.println("Rendering scene to window");
         Camera camera = (Camera)cameraObject.getComponent(Camera.class);
         screen.drawColourMapToScreen(camera.raycastPixelColourMap());
         
         System.out.println("Scene took: " + Math.round((System.nanoTime() - nanoStartTime) / 1000000f) + " milliseconds to render");
-        
-        
+             
     }   
     
 }
