@@ -18,7 +18,7 @@ public class SphereCollider extends Component implements Collider {
     
     @Override
     public boolean doesPointCollide (Vector3 point) {
-        return Vector3.distance(point, parent.transform.position) <= radius;
+        return Vector3.distanceSquared(point, parent.transform.position) <= Math.pow(radius, 2);
     }
     
     @Override

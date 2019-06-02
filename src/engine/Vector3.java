@@ -25,6 +25,11 @@ public class Vector3 {
         return (float)Math.sqrt(Math.pow(relativeVector.x, 2) + Math.pow(relativeVector.y, 2) + Math.pow(relativeVector.z, 2));
     }
     
+    public static float distanceSquared(Vector3 vectorA, Vector3 vectorB) {
+        Vector3 relativeVector = Vector3.copy(vectorB).subtract(vectorA);
+        return (float)(Math.pow(relativeVector.x, 2) + Math.pow(relativeVector.y, 2) + Math.pow(relativeVector.z, 2));
+    }
+    
     public static Vector3 copy (Vector3 original) {
         return new Vector3(original.x, original.y, original.z);
     }

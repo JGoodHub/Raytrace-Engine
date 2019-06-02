@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import engine.Vector3;
 import engine.components.Collider;
-import engine.components.SphereCollider;
 
 public class ColliderManager {
     

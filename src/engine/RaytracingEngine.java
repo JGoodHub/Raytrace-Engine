@@ -12,7 +12,9 @@ import javafx.scene.layout.VBox;
 
 public class RaytracingEngine extends Application {
     
-    Screen screen;
+    private Screen screen;
+    private long nanoStartTime;
+    
     
     public static void main(String[] args) {
         launch(args);
@@ -32,6 +34,8 @@ public class RaytracingEngine extends Application {
     }
 
     public void initialise () {
+        nanoStartTime = System.nanoTime();
+        
         ColliderManager.initalise();
         
         GameObject cameraObject = new GameObject();
@@ -40,7 +44,7 @@ public class RaytracingEngine extends Application {
         
         GameObject sphereObject1 = new GameObject();
         sphereObject1.attachComponent(new SphereCollider(5f, Color.RED));
-        sphereObject1.transform.position = new Vector3(-10, -5, 30);
+        sphereObject1.transform.position = new Vector3(-10, -2.5f, 30);
         
         GameObject sphereObject2 = new GameObject();
         sphereObject2.attachComponent(new SphereCollider(2f, Color.GREEN));
@@ -48,7 +52,7 @@ public class RaytracingEngine extends Application {
         
         GameObject sphereObject3 = new GameObject();
         sphereObject3.attachComponent(new SphereCollider(15f, Color.BLUE));
-        sphereObject3.transform.position = new Vector3(25, 5, 30);
+        sphereObject3.transform.position = new Vector3(25, 5, 45);
         
         GameObject planeObject = new GameObject();
         planeObject.attachComponent(new PlaneCollider(Color.BURLYWOOD));
@@ -57,7 +61,7 @@ public class RaytracingEngine extends Application {
         Camera camera = (Camera)cameraObject.getComponent(Camera.class);
         screen.drawColourMapToScreen(camera.raycastPixelColourMap());
         
-        
+        System.out.println("Scene took: " + Math.round((System.nanoTime() - nanoStartTime) / 1000000f) + " milliseconds to render");
         
         
     }   
