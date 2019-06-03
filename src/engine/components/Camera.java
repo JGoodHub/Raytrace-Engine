@@ -15,6 +15,9 @@ public class Camera extends Component {
     private float fieldOfView = 60f;    
     private float farClippingPlane = 300f;
     
+    private float lightFalloffStartAngle = 40f;
+    private float lightFalloffEndAngle = 110f;
+    
     private Vector3[][] vectorPixelMap;    
     private Screen targetScreen;    
     private Color backgroundColour;
@@ -29,10 +32,10 @@ public class Camera extends Component {
         
         this.backgroundColour = backgroundColour;
         
-        generatePixelVectorMap();
+        generateRayDirectionMap();
     }
     
-    private void generatePixelVectorMap () {
+    private void generateRayDirectionMap () {
         vectorPixelMap = new Vector3[xResolution][yResolution];        
         
         float fovInRadians = (float)Math.toRadians(fieldOfView);
@@ -66,34 +69,57 @@ public class Camera extends Component {
                 //Check if that pixel contains a collider
                 RaycastHit colliderRayhit = Raycaster.fireRaycast(parent.transform.position, rayDirection, farClippingPlane);
                 if (colliderRayhit.collider != null) {
-                    if (renderShadows == true) {
-                        //Check if that part of the collider is in shadow
-                        for (Light l : LightManager.sceneLights) {                 
-                            RaycastHit lightRayhit = Raycaster.fireRaycast(
-                                    colliderRayhit.point, 
-                                    Vector3.getDirection(colliderRayhit.point, l.parent.transform.position), 
-                                    Vector3.distance(colliderRayhit.point, l.parent.transform.position)
-                            );
-
-                            if (Vector3.distance(lightRayhit.point, l.parent.transform.position) < 1f) {
-                                colourRow[x] = colliderRayhit.collider.getColour();
-                            } else {
-                                colourRow[x] = colliderRayhit.collider.getColour().darker().darker();
-                            }
+                    Color baseColour = colliderRayhit.collider.getColour();
+                    Color pixelColour = colliderRayhit.collider.getColour();
+                    
+                    //Check if that part of the collider is in shadow
+                    for (Light l : LightManager.sceneLights) {
+                        Vector3 lightDirection = Vector3.getDirection(colliderRayhit.point, l.parent.transform.position);
+                        RaycastHit lightRayhit = Raycaster.fireRaycast(
+                                colliderRayhit.point,
+                                lightDirection,
+                                Vector3.distance(colliderRayhit.point, l.parent.transform.position)
+                        );
+                                                
+                        if (Vector3.distance(lightRayhit.point, l.parent.transform.position) > 1f) {
+                            pixelColour = modifiyColour(pixelColour, 0.25f);
                         }
-                    } else {
-                        colourRow[x] = colliderRayhit.collider.getColour();
-                    }
+                        
+                        float angleToLight = Vector3.angleBetween(colliderRayhit.normal, lightDirection);                        
+                        if (angleToLight >= lightFalloffStartAngle && angleToLight <= lightFalloffEndAngle) {
+                            float normalAngleModifier =  1 - ((angleToLight - lightFalloffStartAngle) / (lightFalloffEndAngle - lightFalloffStartAngle));
+                            pixelColour = modifiyColour(baseColour, 0.25f + (normalAngleModifier * 0.75f));
+                        }                        
+                    }                                  
+                    
+                    colourRow[x] = pixelColour;
                 } else {
                     colourRow[x] = backgroundColour;
                 }                
             }
             
-            System.out.println("Progress: " + (Math.round((y / (float)yResolution) * 1000) / 10f) + "%");
             RaytracingEngine.screen.drawLineToScreen(y, colourRow);
             
         }
     } 
+    
+    private float clamp (float value, float min, float max) {
+        if (value < min) {
+            return min;
+        } else if (value > max) {
+            return max;
+        } else {
+            return value;
+        }
+    }
+    
+    private Color modifiyColour (Color col, float lightnessModifier) {
+        return new Color(
+                col.getRed() * lightnessModifier,
+                col.getGreen() * lightnessModifier,
+                col.getBlue() * lightnessModifier,
+                1f);
+    }
     
     
 }

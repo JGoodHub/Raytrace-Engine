@@ -8,6 +8,8 @@ public class LightManager {
     
     public static List<Light> sceneLights;
     
+    public float ambientLightIntensity;
+    
     public static void initialise () {
         sceneLights = new ArrayList<>();
     }

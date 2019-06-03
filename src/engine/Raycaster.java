@@ -23,8 +23,8 @@ public class Raycaster {
             Collider collidedObject = ColliderManager.checkPointForCollision(checkPoint);
             if (collidedObject != null) {
                 RaycastHit rayhit;
-                if (isSubRay == true) {
-                    rayhit = new RaycastHit(checkPoint, collidedObject) ;     
+                if (isSubRay == true) {                    
+                    rayhit = new RaycastHit(checkPoint, collidedObject.getNormalOfSurfacePoint(checkPoint), collidedObject) ;     
                 } else {
                     checkPoint.subtract(stepVector);
                     rayhit = fireRaycast(checkPoint, direction, accuracy * 2, accuracy / 100, true);
@@ -39,7 +39,7 @@ public class Raycaster {
         }
         
         Vector3 finalPoint = Vector3.copy(direction).normalised().scaled(distance);
-        return new RaycastHit(Vector3.copy(origin).add(finalPoint), null);
+        return new RaycastHit(Vector3.copy(origin).add(finalPoint), new Vector3(), null);
     }
     
 }

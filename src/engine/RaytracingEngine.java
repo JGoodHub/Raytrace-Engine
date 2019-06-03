@@ -15,7 +15,7 @@ public class RaytracingEngine extends Application {
     
     @Override
     public void start(Stage primaryStage) {        
-        screen = new Screen(1280/2, 720/2);
+        screen = new Screen(1280, 720);
         Scene scene = new Scene(new VBox(screen.imageView), screen.width, screen.height);
         
         primaryStage.setTitle("Raytrace Engine Test");

@@ -1,5 +1,6 @@
 package engine.components;
 
+import engine.GameObject;
 import javafx.scene.paint.Color;
 import engine.Vector3;
 import engine.managers.ColliderManager;
@@ -22,8 +23,18 @@ public class SphereCollider extends Component implements Collider {
     }
     
     @Override
+    public Vector3 getNormalOfSurfacePoint(Vector3 point) {
+        return Vector3.getDirection(parent.transform.position, point);
+    }
+    
+    @Override
     public Color getColour() {
         return colour;
+    }
+    
+    @Override
+    public GameObject getParent () {
+        return parent;
     }
     
 }

@@ -35,7 +35,16 @@ public class Vector3 {
     }
     
     public static Vector3 getDirection (Vector3 origin, Vector3 target) {
-        return Vector3.copy(target).subtract(origin);
+        return Vector3.copy(target).subtract(origin).normalised();
+    }
+    
+    public static float dotProduct (Vector3 vectorA, Vector3 vectorB) {
+        return (vectorA.x * vectorB.x) + (vectorA.y * vectorB.y) + (vectorA.z * vectorB.z);
+    }
+    
+    public static float angleBetween (Vector3 vectorA, Vector3 vectorB) {
+        float cosineAngle = Vector3.dotProduct(vectorA, vectorB) / (vectorA.magnitude() * vectorB.magnitude());
+        return (float)Math.toDegrees(Math.acos(cosineAngle));
     }
         
     public Vector3 add (Vector3 other) {
