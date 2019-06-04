@@ -15,7 +15,7 @@ public class Camera extends Component {
     private float fieldOfView = 60f;    
     private float farClippingPlane = 300f;
     
-    private float lightFalloffStartAngle = 40f;
+    private float lightFalloffStartAngle = 80f;
     private float lightFalloffEndAngle = 110f;
     
     private Vector3[][] vectorPixelMap;    
@@ -80,7 +80,7 @@ public class Camera extends Component {
                                 lightDirection,
                                 Vector3.distance(colliderRayhit.point, l.parent.transform.position)
                         );
-                                                
+                                              
                         if (Vector3.distance(lightRayhit.point, l.parent.transform.position) > 1f) {
                             pixelColour = modifiyColour(pixelColour, 0.25f);
                         }
@@ -89,7 +89,10 @@ public class Camera extends Component {
                         if (angleToLight >= lightFalloffStartAngle && angleToLight <= lightFalloffEndAngle) {
                             float normalAngleModifier =  1 - ((angleToLight - lightFalloffStartAngle) / (lightFalloffEndAngle - lightFalloffStartAngle));
                             pixelColour = modifiyColour(baseColour, 0.25f + (normalAngleModifier * 0.75f));
-                        }                        
+                        }
+                        
+                        float lightFalloffCoefficent = 1f - clamp(Vector3.distance(colliderRayhit.point, l.parent.transform.position) / l.falloffRange, 0, 1);
+                        pixelColour = modifiyColour(pixelColour, lightFalloffCoefficent);
                     }                                  
                     
                     colourRow[x] = pixelColour;

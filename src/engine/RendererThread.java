@@ -46,8 +46,8 @@ public class RendererThread implements Runnable {
         planeObject.transform.position = new Vector3(0, -5, 0);
         
         GameObject lightObject = new GameObject();
-        lightObject.attachComponent(new Light(1f, Color.WHITE));
-        lightObject.transform.position = new Vector3(13, 50, 40);
+        lightObject.attachComponent(new Light(150f, Color.WHITE));
+        lightObject.transform.position = new Vector3(10, 20, 40);
         
         System.out.println("Rendering scene to window");
         Camera camera = (Camera)cameraObject.getComponent(Camera.class);

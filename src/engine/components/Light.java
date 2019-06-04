@@ -5,11 +5,11 @@ import javafx.scene.paint.Color;
 
 public class Light extends Component {
     
-    private float intensity;
-    private Color colour;
+    public float falloffRange;
+    public Color colour;
 
     public Light(float intensity, Color colour) {
-        this.intensity = intensity;
+        this.falloffRange = intensity;
         this.colour = colour;
         
         LightManager.sceneLights.add(this);
